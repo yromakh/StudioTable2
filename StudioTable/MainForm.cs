@@ -63,7 +63,7 @@ namespace StudioTable
             try
             {
                 dataGridView1.DataSource = StudioDataSet.Tables;
-                this.Controls.Add(dataGridView1);
+                
             }
             catch(Exception ex)
             {
