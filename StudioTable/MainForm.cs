@@ -62,7 +62,7 @@ namespace StudioTable
             StudioDataSet = accessDBobject.DisplayAllRecords(StudioDataSet, StudioTable.TableName);
             try
             {
-                dataGridView1.DataSource = StudioDataSet.Tables;
+                dataGridView1.DataSource = StudioDataSet.Tables[0];
                 
             }
             catch(Exception ex)
@@ -70,6 +70,7 @@ namespace StudioTable
                 MessageBox.Show(ex.Message);
             }
         }
+
         #region AddRecord
         private void btnAddRecord_Click(object sender, EventArgs e)
         {
@@ -84,7 +85,6 @@ namespace StudioTable
             {
                 accessDBobject.InsertRecord(e.AddTitle, e.AddContent);
                 accessDBobject.RefreshRecordsDB(StudioDataSet, StudioTable.TableName);
-                dataGridView1.DataSource = accessDBobject.DisplayAllRecords(StudioDataSet, StudioTable.TableName);
             }
         }
         #endregion
@@ -92,7 +92,6 @@ namespace StudioTable
         private void btnRefresh_Click(object sender, EventArgs e)
         {
             accessDBobject.RefreshRecordsDB(StudioDataSet, StudioTable.TableName);
-            dataGridView1.DataSource = accessDBobject.DisplayAllRecords(StudioDataSet, StudioTable.TableName);
         }
 
         private void btnClose_Click(object sender, EventArgs e)
@@ -128,9 +127,8 @@ namespace StudioTable
         {
             if(null != this.dataGridView1.SelectedRows)
             {
-                accessDBobject.DeleteRecord(this.dataGridView1.SelectedRows[0].Cells["REC_LIST"].EditedFormattedValue.ToString());
+                accessDBobject.DeleteRecord(this.dataGridView1.SelectedRows[0].Cells["REC_LIST"].Value.ToString());
                 accessDBobject.RefreshRecordsDB(StudioDataSet, StudioTable.TableName);
-                dataGridView1.DataSource = accessDBobject.DisplayAllRecords(StudioDataSet, StudioTable.TableName);
             }
         }
 
