@@ -59,11 +59,10 @@ namespace StudioTable
 
         private void DisplayDBdata()
         {
-            StudioDataSet = accessDBobject.DisplayAllRecords(StudioDataSet, StudioTable.TableName);
             try
             {
-                dataGridView1.DataSource = StudioDataSet.Tables[0];
-                
+                StudioDataSet = accessDBobject.DisplayAllRecords(StudioDataSet, StudioTable.TableName);
+                dataGridView1.DataSource = StudioDataSet.Tables[0];   
             }
             catch(Exception ex)
             {
@@ -74,30 +73,58 @@ namespace StudioTable
         #region AddRecord
         private void btnAddRecord_Click(object sender, EventArgs e)
         {
-            AddRecord addRecord = new AddRecord();
-            addRecord.AddRecordEvent +=addRecord_AddRecordEvent;
-            addRecord.ShowDialog();
+            try
+            {
+                AddRecord addRecord = new AddRecord();
+                addRecord.AddRecordEvent += addRecord_AddRecordEvent;
+                addRecord.ShowDialog();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void addRecord_AddRecordEvent(object sender, AddRecord.AddRecordClass e)
         {
-            if (null != e && (null != e.AddTitle || null != e.AddContent))
+            try
             {
-                accessDBobject.InsertRecord(e.AddTitle, e.AddContent);
-                accessDBobject.RefreshRecordsDB(StudioDataSet, StudioTable.TableName);
+                if (null != e && (null != e.AddTitle || null != e.AddContent))
+                {
+                    accessDBobject.InsertRecord(e.AddTitle, e.AddContent);
+                    accessDBobject.RefreshRecordsDB(StudioDataSet, StudioTable.TableName);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
         #endregion
 
         private void btnRefresh_Click(object sender, EventArgs e)
         {
-            accessDBobject.RefreshRecordsDB(StudioDataSet, StudioTable.TableName);
+            try
+            {
+                accessDBobject.RefreshRecordsDB(StudioDataSet, StudioTable.TableName);
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void btnClose_Click(object sender, EventArgs e)
         {
-            this.Close();
-            accessDBobject.CloseConnection();
+            try
+            {
+                this.Close();
+                accessDBobject.CloseConnection();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         #region EditRecord
@@ -123,14 +150,31 @@ namespace StudioTable
         }
         #endregion
 
+        #region DeleteRecord
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            if(null != this.dataGridView1.SelectedRows)
+            try
             {
-                accessDBobject.DeleteRecord(this.dataGridView1.SelectedRows[0].Cells["REC_LIST"].Value.ToString());
-                accessDBobject.RefreshRecordsDB(StudioDataSet, StudioTable.TableName);
+                if (null != this.dataGridView1.SelectedRows || null != this.dataGridView1.SelectedCells)
+                {
+                    if (this.dataGridView1.SelectedCells[0].RowIndex >= 0)
+                    {
+                        string selectedCellValue = this.dataGridView1.SelectedCells[0].Value.ToString();
+                        accessDBobject.DeleteRecord(selectedCellValue);
+                    }
+                    else
+                    {
+                        accessDBobject.DeleteRecord(this.dataGridView1.SelectedRows[0].Cells["REC_LIST"].Value.ToString());
+                    }
+                    accessDBobject.RefreshRecordsDB(StudioDataSet, StudioTable.TableName);
+                   
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
-
+        #endregion
     }
 }
