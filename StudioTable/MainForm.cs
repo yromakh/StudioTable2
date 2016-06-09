@@ -159,12 +159,9 @@ namespace StudioTable
                 {
                     if (this.dataGridView1.SelectedCells[0].RowIndex >= 0)
                     {
-                        string selectedCellValue = this.dataGridView1.SelectedCells[0].Value.ToString();
+                        int dataRowIndex = this.dataGridView1.SelectedCells[0].RowIndex;
+                        string selectedCellValue = this.dataGridView1.Rows[dataRowIndex].Cells["REC_LIST"].Value.ToString();
                         accessDBobject.DeleteRecord(selectedCellValue);
-                    }
-                    else
-                    {
-                        accessDBobject.DeleteRecord(this.dataGridView1.SelectedRows[0].Cells["REC_LIST"].Value.ToString());
                     }
                     accessDBobject.RefreshRecordsDB(StudioDataSet, StudioTable.TableName);
                    
