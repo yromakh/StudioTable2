@@ -29,6 +29,7 @@ namespace StudioTable
             SetConnection();
             StudioDataSet.Tables.Add(StudioTable);
             DisplayDBdata();
+            this.dataGridView1.Columns["REC_ID"].Visible = false;
         }
 
         private void CreateTable()
@@ -160,7 +161,7 @@ namespace StudioTable
                     if (this.dataGridView1.SelectedCells[0].RowIndex >= 0)
                     {
                         int dataRowIndex = this.dataGridView1.SelectedCells[0].RowIndex;
-                        string selectedCellValue = this.dataGridView1.Rows[dataRowIndex].Cells["REC_LIST"].Value.ToString();
+                        string selectedCellValue = this.dataGridView1.Rows[dataRowIndex].Cells["REC_ID"].Value.ToString();
                         accessDBobject.DeleteRecord(selectedCellValue);
                     }
                     accessDBobject.RefreshRecordsDB(StudioDataSet, StudioTable.TableName);
