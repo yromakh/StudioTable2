@@ -131,21 +131,20 @@ namespace StudioTable
         #region EditRecord
         private void btnEdit_Click(object sender, EventArgs e)
         {
-            EditRecord editRecord = new EditRecord();
+            EditRecord editRecord = new EditRecord(this);
             editRecord.EditRecordEvent += editRecord_EditRecordEvent;
             editRecord.ShowDialog();
         }
 
         void editRecord_EditRecordEvent(object sender, EditRecord.EditNotepadRecord e)
         {
-            if (null != this.dataGridView1.SelectedRows)
+            if (null != this.dataGridView1.SelectedRows || null != this.dataGridView1.SelectedCells)
             {
-
-                if (null != e && (null != e.EditTitle || null != e.EditContent))
+                if (null != e && (null != e.EditTitle || null != e.EditContent || null != e.ID))
                 {
-                    accessDBobject.UpdateRecords(e.EditTitle, e.EditContent);
+                    accessDBobject.UpdateRecords(e.EditTitle, e.EditContent, e.ID);
                     accessDBobject.RefreshRecordsDB(StudioDataSet, StudioTable.TableName);
-                    dataGridView1.DataSource = accessDBobject.DisplayAllRecords(StudioDataSet, StudioTable.TableName);
+                    dataGridView1.Refresh();  //.DataSource = accessDBobject.DisplayAllRecords(StudioDataSet, StudioTable.TableName);
                 }
             }
         }

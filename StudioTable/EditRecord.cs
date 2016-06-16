@@ -14,25 +14,22 @@ namespace StudioTable
     public partial class EditRecord : Form
     {
         NotepadAccess notepadAccess = new NotepadAccess();
-        MainForm mainForm = new MainForm();
+        MainForm mainForm;
 
-        public EditRecord()
+        public EditRecord(MainForm _mainForm)
         {
             InitializeComponent();
+            this.mainForm = _mainForm;
             this.AcceptButton = btnOK;
             this.CancelButton = btnCancel;
 
             if (null != mainForm.dataGridView1.SelectedRows || null != mainForm.dataGridView1.SelectedCells)
             {
-                //if (mainForm.dataGridView1.SelectedCells[0].RowIndex >= 0)
-                //{
-                int rowIndex = mainForm.dataGridView1.SelectedCells[0].RowIndex; //SelectedRows[0].Cells["REC_ID"].RowIndex; //SelectedCells[0].RowIndex;
-                string idFromMainForm = mainForm.dataGridView1.Rows[rowIndex].Cells["REC_ID"].Value.ToString();  //GetCellCount(DataGridViewElementStates.Selected).ToString(); //  .SelectedCells[0].Value.ToString();  // SelectedRows[0].Cells["REC_LIST"].Value.ToString();
-                this.txtTitle.Text = notepadAccess.ShowDBTitle(idFromMainForm);
+                string titleFromMainForm = mainForm.dataGridView1.CurrentRow.Cells["REC_LIST"].Value.ToString();
+                this.txtTitle.Text = notepadAccess.ShowDBTitle(titleFromMainForm);
 
-                string contentFromMainForm = mainForm.dataGridView1.SelectedCells[1].Value.ToString(); //  SelectedRows[0].Cells["REC_CONTENT"].Value.ToString();
+                string contentFromMainForm = mainForm.dataGridView1.CurrentRow.Cells["REC_CONTENT"].Value.ToString();
                 this.txtContent.Text = notepadAccess.ShowDBContent(contentFromMainForm);
-                //}
             }
         }
 
@@ -40,6 +37,7 @@ namespace StudioTable
         {
             public string EditTitle { get; set; }
             public string EditContent { get; set; }
+            public string ID { get; set; }
         }
 
         public event EventHandler<EditNotepadRecord> EditRecordEvent;
@@ -52,9 +50,17 @@ namespace StudioTable
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-
+            EditNotepadRecord editNotepadRecord = new EditNotepadRecord();
+            editNotepadRecord.EditTitle = this.txtTitle.Text;
+            editNotepadRecord.EditContent = this.txtContent.Text;
+            editNotepadRecord.ID = mainForm.dataGridView1.CurrentRow.Cells["REC_ID"].Value.ToString();
+            OnEditRecordEvent(editNotepadRecord);
+            this.Close();
         }
 
-
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
     }
 }
