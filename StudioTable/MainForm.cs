@@ -19,7 +19,6 @@ namespace StudioTable
         DataSet StudioDataSet = new DataSet("SDataSet");
         
         NotepadAccess accessDBobject = new NotepadAccess();
-        string connectionStr = @"Data Source=ROMAKHYPC\SQLEXPRESS;Initial Catalog=Notepad;Integrated Security=True";
         List<Record> recordList = new List<Record>();
 
         public MainForm()
@@ -50,7 +49,7 @@ namespace StudioTable
         {
             try
             {
-                accessDBobject.OpenConnnection(connectionStr);
+                accessDBobject.OpenConnnection();
             }
             catch(Exception ex)
             {
@@ -144,7 +143,7 @@ namespace StudioTable
                 {
                     accessDBobject.UpdateRecords(e.EditTitle, e.EditContent, e.ID);
                     accessDBobject.RefreshRecordsDB(StudioDataSet, StudioTable.TableName);
-                    dataGridView1.Refresh();  //.DataSource = accessDBobject.DisplayAllRecords(StudioDataSet, StudioTable.TableName);
+                    dataGridView1.Refresh();
                 }
             }
         }

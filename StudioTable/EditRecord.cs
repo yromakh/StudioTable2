@@ -25,11 +25,11 @@ namespace StudioTable
 
             if (null != mainForm.dataGridView1.SelectedRows || null != mainForm.dataGridView1.SelectedCells)
             {
-                string titleFromMainForm = mainForm.dataGridView1.CurrentRow.Cells["REC_LIST"].Value.ToString();
-                this.txtTitle.Text = notepadAccess.ShowDBTitle(titleFromMainForm);
+                string getRecordID = mainForm.dataGridView1.CurrentRow.Cells["REC_ID"].Value.ToString();
+                this.txtTitle.Text = notepadAccess.ShowDBRecord(getRecordID);
 
-                string contentFromMainForm = mainForm.dataGridView1.CurrentRow.Cells["REC_CONTENT"].Value.ToString();
-                this.txtContent.Text = notepadAccess.ShowDBContent(contentFromMainForm);
+                string getRecordIDforContent = mainForm.dataGridView1.CurrentRow.Cells["REC_ID"].Value.ToString();
+                this.txtContent.Text = notepadAccess.ShowDBRecord(getRecordIDforContent);
             }
         }
 
