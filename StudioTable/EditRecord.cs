@@ -23,13 +23,28 @@ namespace StudioTable
             this.AcceptButton = btnOK;
             this.CancelButton = btnCancel;
 
-            if (null != mainForm.dataGridView1.SelectedRows || null != mainForm.dataGridView1.SelectedCells)
+            try
             {
-                string getRecordID = mainForm.dataGridView1.CurrentRow.Cells["REC_ID"].Value.ToString();
-                this.txtTitle.Text = notepadAccess.ShowDBRecord(getRecordID);
+                if (null != mainForm.dataGridView1.SelectedRows || null != mainForm.dataGridView1.SelectedCells)
+                {
+                    string getRecordID = mainForm.dataGridView1.CurrentRow.Cells["REC_ID"].Value.ToString();
+                    string getRecordTitle = mainForm.dataGridView1.CurrentRow.Cells["REC_LIST"].Value.ToString();
+                    string getRecordContent = mainForm.dataGridView1.CurrentRow.Cells["REC_CONTENT"].Value.ToString();
 
-                string getRecordIDforContent = mainForm.dataGridView1.CurrentRow.Cells["REC_ID"].Value.ToString();
-                this.txtContent.Text = notepadAccess.ShowDBRecord(getRecordIDforContent);
+                    try
+                    {
+                        this.txtTitle.Text = notepadAccess.ShowDBRecord(getRecordID, getRecordTitle);
+                        this.txtContent.Text = notepadAccess.ShowDBRecord(getRecordID, getRecordContent);
+                    }
+                    catch(DataException ex1)
+                    {
+                        MessageBox.Show(ex1.Message);
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
 
