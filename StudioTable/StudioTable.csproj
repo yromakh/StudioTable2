@@ -47,17 +47,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AddRecord.cs">
+    <Compile Include="AddRecordForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AddRecord.Designer.cs">
-      <DependentUpon>AddRecord.cs</DependentUpon>
+    <Compile Include="AddRecordForm.Designer.cs">
+      <DependentUpon>AddRecordForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="EditRecord.cs">
+    <Compile Include="EditRecordForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="EditRecord.Designer.cs">
-      <DependentUpon>EditRecord.cs</DependentUpon>
+    <Compile Include="EditRecordForm.Designer.cs">
+      <DependentUpon>EditRecordForm.cs</DependentUpon>
     </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -67,12 +67,11 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Record.cs" />
-    <EmbeddedResource Include="AddRecord.resx">
-      <DependentUpon>AddRecord.cs</DependentUpon>
+    <EmbeddedResource Include="AddRecordForm.resx">
+      <DependentUpon>AddRecordForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="EditRecord.resx">
-      <DependentUpon>EditRecord.cs</DependentUpon>
+    <EmbeddedResource Include="EditRecordForm.resx">
+      <DependentUpon>EditRecordForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

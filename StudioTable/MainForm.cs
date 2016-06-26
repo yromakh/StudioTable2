@@ -11,24 +11,22 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using ConnectToNotepad;
 
-namespace StudioTable
+namespace RecordsTable
 {
     public partial class MainForm : Form
     {
-        DataTable StudioTable = new DataTable("STable");
-        DataSet StudioDataSet = new DataSet("SDataSet");
-        
+        DataTable RecordsTable = new DataTable("STable");
+        DataSet RecordsDataSet = new DataSet("SDataSet");
         NotepadAccess accessDBobject = new NotepadAccess();
-        List<Record> recordList = new List<Record>();
 
         public MainForm()
         {
             InitializeComponent();
             //CreateTable();
             SetConnection();
-            StudioDataSet.Tables.Add(StudioTable);
+            RecordsDataSet.Tables.Add(RecordsTable);
             DisplayDBdata();
-            this.dataGridView1.Columns["REC_ID"].Visible = false;
+            this.recordsGridView.Columns["REC_ID"].Visible = false;
         }
 
         private void CreateTable()
@@ -40,9 +38,9 @@ namespace StudioTable
 
             DataColumn columnTitle = new DataColumn("Title", typeof(string));
 
-            StudioTable.Columns.AddRange(new DataColumn[] { columnId, columnTitle });
+            RecordsTable.Columns.AddRange(new DataColumn[] { columnId, columnTitle });
 
-            this.dataGridView1.DataSource = StudioTable;
+            this.recordsGridView.DataSource = RecordsTable;
         }
 
         private void SetConnection()
@@ -61,8 +59,8 @@ namespace StudioTable
         {
             try
             {
-                StudioDataSet = accessDBobject.DisplayAllRecords(StudioDataSet, StudioTable.TableName);
-                dataGridView1.DataSource = StudioDataSet.Tables[0];   
+                RecordsDataSet = accessDBobject.DisplayAllRecords(RecordsDataSet, RecordsTable.TableName);
+                recordsGridView.DataSource = RecordsDataSet.Tables[0];   
             }
             catch(Exception ex)
             {
@@ -75,7 +73,7 @@ namespace StudioTable
         {
             try
             {
-                AddRecord addRecord = new AddRecord();
+                AddRecordForm addRecord = new AddRecordForm();
                 addRecord.AddRecordEvent += addRecord_AddRecordEvent;
                 addRecord.ShowDialog();
             }
@@ -85,14 +83,14 @@ namespace StudioTable
             }
         }
 
-        private void addRecord_AddRecordEvent(object sender, AddRecord.AddRecordClass e)
+        private void addRecord_AddRecordEvent(object sender, AddRecordForm.AddRecord e)
         {
             try
             {
                 if (null != e && (null != e.AddTitle || null != e.AddContent))
                 {
                     accessDBobject.InsertRecord(e.AddTitle, e.AddContent);
-                    accessDBobject.RefreshRecordsDB(StudioDataSet, StudioTable.TableName);
+                    accessDBobject.RefreshRecords(RecordsDataSet, RecordsTable.TableName);
                 }
             }
             catch (Exception ex)
@@ -106,7 +104,7 @@ namespace StudioTable
         {
             try
             {
-                accessDBobject.RefreshRecordsDB(StudioDataSet, StudioTable.TableName);
+                accessDBobject.RefreshRecords(RecordsDataSet, RecordsTable.TableName);
             }
             catch(Exception ex)
             {
@@ -130,21 +128,39 @@ namespace StudioTable
         #region EditRecord
         private void btnEdit_Click(object sender, EventArgs e)
         {
-            EditRecord editRecord = new EditRecord(this);
-            editRecord.EditRecordEvent += editRecord_EditRecordEvent;
-            editRecord.ShowDialog();
+            try
+            {
+                EditRecordForm editRecord = new EditRecordForm(this);
+                editRecord.EditRecordEvent += editRecord_EditRecordEvent;
+                editRecord.ShowDialog();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
-        void editRecord_EditRecordEvent(object sender, EditRecord.EditNotepadRecord e)
+        void editRecord_EditRecordEvent(object sender, EditRecordForm.EditRecord e)
         {
-            if (null != this.dataGridView1.SelectedRows || null != this.dataGridView1.SelectedCells)
+            try
             {
-                if (null != e && (null != e.EditTitle || null != e.EditContent || null != e.ID))
+                if (null != this.recordsGridView.SelectedRows || null != this.recordsGridView.SelectedCells)
                 {
-                    accessDBobject.UpdateRecords(e.EditTitle, e.EditContent, e.ID);
-                    accessDBobject.RefreshRecordsDB(StudioDataSet, StudioTable.TableName);
-                    dataGridView1.Refresh();
+                    if (null != e && (null != e.EditTitle || null != e.EditContent || null != e.ID))
+                    {
+                        accessDBobject.UpdateRecords(e.EditTitle, e.EditContent, e.ID);
+                        accessDBobject.RefreshRecords(RecordsDataSet, RecordsTable.TableName);
+                        recordsGridView.Refresh();
+                    }
                 }
+            }
+            catch(DataException ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
         #endregion
@@ -154,17 +170,21 @@ namespace StudioTable
         {
             try
             {
-                if (null != this.dataGridView1.SelectedRows || null != this.dataGridView1.SelectedCells)
+                if (null != this.recordsGridView.SelectedRows || null != this.recordsGridView.SelectedCells)
                 {
-                    if (this.dataGridView1.SelectedCells[0].RowIndex >= 0)
+                    if (this.recordsGridView.SelectedCells[0].RowIndex >= 0)
                     {
-                        int dataRowIndex = this.dataGridView1.SelectedCells[0].RowIndex;
-                        string selectedCellValue = this.dataGridView1.Rows[dataRowIndex].Cells["REC_ID"].Value.ToString();
+                        int dataRowIndex = this.recordsGridView.SelectedCells[0].RowIndex;
+                        string selectedCellValue = this.recordsGridView.Rows[dataRowIndex].Cells["REC_ID"].Value.ToString();
                         accessDBobject.DeleteRecord(selectedCellValue);
                     }
-                    accessDBobject.RefreshRecordsDB(StudioDataSet, StudioTable.TableName);
+                    accessDBobject.RefreshRecords(RecordsDataSet, RecordsTable.TableName);
                    
                 }
+            }
+            catch (DataException ex)
+            {
+                MessageBox.Show(ex.Message);
             }
             catch (Exception ex)
             {

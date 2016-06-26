@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using ConnectToNotepad;
 
-namespace StudioTable
+namespace RecordsTable
 {
-    public partial class EditRecord : Form
+    public partial class EditRecordForm : Form
     {
         NotepadAccess notepadAccess = new NotepadAccess();
         MainForm mainForm;
 
-        public EditRecord(MainForm _mainForm)
+        public EditRecordForm(MainForm _mainForm)
         {
             InitializeComponent();
             this.mainForm = _mainForm;
@@ -25,16 +25,14 @@ namespace StudioTable
 
             try
             {
-                if (null != mainForm.dataGridView1.SelectedRows || null != mainForm.dataGridView1.SelectedCells)
+                if (null != mainForm.recordsGridView.SelectedRows || null != mainForm.recordsGridView.SelectedCells)
                 {
-                    string getRecordID = mainForm.dataGridView1.CurrentRow.Cells["REC_ID"].Value.ToString();
-                    string getRecordTitle = mainForm.dataGridView1.CurrentRow.Cells["REC_LIST"].Value.ToString();
-                    string getRecordContent = mainForm.dataGridView1.CurrentRow.Cells["REC_CONTENT"].Value.ToString();
+                    string currectRecordID = mainForm.recordsGridView.CurrentRow.Cells["REC_ID"].Value.ToString();
 
                     try
                     {
-                        this.txtTitle.Text = notepadAccess.ShowDBRecord(getRecordID, getRecordTitle);
-                        this.txtContent.Text = notepadAccess.ShowDBRecord(getRecordID, getRecordContent);
+                        this.txtTitle.Text = notepadAccess.GetCurrentRecord(currectRecordID, "title");
+                        this.txtContent.Text = notepadAccess.GetCurrentRecord(currectRecordID, "content");
                     }
                     catch(DataException ex1)
                     {
@@ -48,16 +46,16 @@ namespace StudioTable
             }
         }
 
-        public class EditNotepadRecord: EventArgs
+        internal class EditRecord: EventArgs
         {
             public string EditTitle { get; set; }
             public string EditContent { get; set; }
             public string ID { get; set; }
         }
 
-        public event EventHandler<EditNotepadRecord> EditRecordEvent;
+        internal event EventHandler<EditRecord> EditRecordEvent;
 
-        private void OnEditRecordEvent(EditNotepadRecord edit)
+        private void OnEditRecordEvent(EditRecord edit)
         {
             if (null != EditRecordEvent)
                 EditRecordEvent(this, edit);
@@ -65,11 +63,11 @@ namespace StudioTable
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            EditNotepadRecord editNotepadRecord = new EditNotepadRecord();
-            editNotepadRecord.EditTitle = this.txtTitle.Text;
-            editNotepadRecord.EditContent = this.txtContent.Text;
-            editNotepadRecord.ID = mainForm.dataGridView1.CurrentRow.Cells["REC_ID"].Value.ToString();
-            OnEditRecordEvent(editNotepadRecord);
+            EditRecord editRecord = new EditRecord();
+            editRecord.EditTitle = this.txtTitle.Text;
+            editRecord.EditContent = this.txtContent.Text;
+            editRecord.ID = mainForm.recordsGridView.CurrentRow.Cells["REC_ID"].Value.ToString();
+            OnEditRecordEvent(editRecord);
             this.Close();
         }
 

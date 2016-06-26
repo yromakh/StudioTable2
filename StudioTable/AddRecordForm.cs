@@ -8,11 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace StudioTable
+namespace RecordsTable
 {
-    public partial class AddRecord : Form
+    public partial class AddRecordForm : Form
     {
-        public AddRecord()
+        public AddRecordForm()
         {
             InitializeComponent();
             this.AcceptButton = btnOK;
@@ -20,16 +20,15 @@ namespace StudioTable
         }
         
         #region AddRecord
-        public class AddRecordClass : EventArgs
+        internal class AddRecord : EventArgs
         {
-            //AddRecord addRecord = new AddRecord();
             public string AddTitle { get; set; }
             public string AddContent { get; set; }
         }
         
-        public event EventHandler<AddRecordClass> AddRecordEvent;
+        internal event EventHandler<AddRecord> AddRecordEvent;
 
-        private void OnAddRecordEvent(AddRecordClass record)
+        private void OnAddRecordEvent(AddRecord record)
         {
             if (null != AddRecordEvent)
                 AddRecordEvent(this, record);
@@ -37,7 +36,7 @@ namespace StudioTable
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            AddRecordClass addRecordObj = new AddRecordClass();
+            AddRecord addRecordObj = new AddRecord();
             addRecordObj.AddTitle = this.txtTitle.Text;
             addRecordObj.AddContent = this.txtContent.Text;
             OnAddRecordEvent(addRecordObj);

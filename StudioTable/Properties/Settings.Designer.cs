@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace StudioTable.Properties
+namespace RecordsTable.Properties
 {
 
 
